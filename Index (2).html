@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dreamy Cafe Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f3fb;--card:#fff;--ink:#2a2340;--mute:#6f6888;--line:#e4def2;--accent:#6b5bd6;--accent-ink:#fff;--soft:#ece8fb;--peach:#ffd9bf;--ok:#2e8b6a;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171329;--card:#221c3a;--ink:#f1edff;--mute:#a69fc4;--line:#352d55;--accent:#9b8cff;--accent-ink:#171329;--soft:#2d2550;--peach:#5a3d33;--ok:#6fd1ab;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#171329;--card:#221c3a;--ink:#f1edff;--mute:#a69fc4;--line:#352d55;--accent:#9b8cff;--accent-ink:#171329;--soft:#2d2550;--peach:#5a3d33;--ok:#6fd1ab;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "DM Sans",system-ui,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.app{display:grid;grid-template-columns:220px minmax(0,1fr) 320px;gap:20px;max-width:1360px;margin:0 auto;padding:20px}
+.side{position:sticky;top:20px;align-self:start;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
+.logo{font:700 24px Fraunces,Georgia,serif;display:flex;gap:8px;align-items:center;margin-bottom:4px}
+.tag{color:var(--mute);font-size:13px;margin:0 0 16px}
+.cats{display:flex;flex-direction:column;gap:4px}
+.cat{display:flex;justify-content:space-between;align-items:center;background:none;border:0;border-radius:10px;padding:10px 12px;text-align:left}
+.cat:hover{background:var(--soft)}
+.cat[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);font-weight:700}
+.cat small{opacity:.7}
+.theme{margin-top:16px;width:100%;background:var(--soft);border:0;border-radius:10px;padding:9px}
+main{min-width:0}
+.top{display:flex;gap:12px;align-items:center;margin-bottom:16px}
+.top h1{font:700 30px Fraunces,Georgia,serif;margin:0;flex:1}
+.search{width:240px;max-width:100%;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:inherit}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stat span{color:var(--mute);font-size:13px}
+.stat b{display:block;font:700 22px Fraunces,Georgia,serif;margin-top:2px}
+.stat.hero{background:var(--peach)}
+.stat.hero span{color:inherit;opacity:.75}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:6px;text-align:left;transition:border-color .15s,transform .15s}
+.item:hover{border-color:var(--accent);transform:translateY(-2px)}
+.emoji{font-size:38px;background:var(--soft);border-radius:12px;height:68px;display:grid;place-items:center}
+.item h3{margin:4px 0 0;font-size:16px}
+.item p{margin:0;color:var(--mute);font-size:13px;flex:1}
+.row{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.price{font-weight:700}
+.add{background:var(--accent);color:var(--accent-ink);border:0;border-radius:999px;padding:6px 14px;font-weight:700}
+.badge{font-size:12px;background:var(--soft);border-radius:999px;padding:2px 8px;align-self:flex-start}
+.empty{grid-column:1/-1;color:var(--mute);padding:30px;text-align:center}
+.order{position:sticky;top:20px;align-self:start;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;max-height:calc(100vh - 40px);display:flex;flex-direction:column}
+.order h2{font:700 20px Fraunces,Georgia,serif;margin:0 0 10px}
+.lines{overflow:auto;flex:1;display:flex;flex-direction:column;gap:10px;min-height:60px}
+.line{display:grid;grid-template-columns:1fr auto;gap:2px 8px;border-bottom:1px dashed var(--line);padding-bottom:10px}
+.line small{color:var(--mute)}
+.qty{display:flex;align-items:center;gap:8px;grid-column:1/-1}
+.qty button{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--soft)}
+.sum{border-top:1px solid var(--line);margin-top:10px;padding-top:10px}
+.sum div{display:flex;justify-content:space-between;color:var(--mute)}
+.sum .tot{color:var(--ink);font-weight:700;font-size:18px;margin-top:4px}
+.go{margin-top:12px;width:100%;background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:12px;font-weight:700}
+.go:disabled{opacity:.45;cursor:not-allowed}
+.clear{margin-top:6px;width:100%;background:none;border:0;color:var(--mute);padding:6px}
+.sizes{display:flex;gap:6px;margin-top:4px}
+.sizes button{flex:1;border:1px solid var(--line);background:var(--soft);border-radius:8px;padding:4px 0;font-size:13px}
+.sizes button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,40px);background:var(--ok);color:#fff;padding:12px 20px;border-radius:12px;opacity:0;transition:.25s;pointer-events:none;z-index:9;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media (max-width:1050px){.app{grid-template-columns:200px minmax(0,1fr)}.order{grid-column:1/-1;position:static;max-height:none}}
+@media (max-width:700px){.app{grid-template-columns:1fr;padding:12px}.side{position:static}.cats{flex-direction:row;overflow-x:auto}.cat{white-space:nowrap}.cat small{display:none}.top{flex-wrap:wrap}.search{width:100%}.stats{grid-template-columns:1fr 1fr 1fr;gap:8px}.stat{padding:10px}.stat b{font-size:17px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="logo">☁️ Dreamy Cafe</div>
+    <p class="tag">Sip something dreamy.</p>
+    <nav class="cats" id="cats" aria-label="Menu categories"></nav>
+    <button class="theme" id="theme">Switch theme</button>
+  </aside>
+  <main>
+    <div class="top">
+      <h1 id="title">All drinks</h1>
+      <input class="search" id="q" type="search" placeholder="Search the menu" aria-label="Search the menu">
+    </div>
+    <div class="stats">
+      <div class="stat hero"><span>Today's pick</span><b>Lavender Latte</b></div>
+      <div class="stat"><span>Items in order</span><b id="sCount">0</b></div>
+      <div class="stat"><span>Order total</span><b id="sTotal">$0.00</b></div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </main>
+  <aside class="order" aria-live="polite">
+    <h2>Your order</h2>
+    <div class="lines" id="lines"></div>
+    <div class="sum">
+      <div><span>Subtotal</span><span id="sub">$0.00</span></div>
+      <div><span>Tax (8%)</span><span id="tax">$0.00</span></div>
+      <div class="tot"><span style="color:inherit">Total</span><span id="tot">$0.00</span></div>
+    </div>
+    <button class="go" id="go" disabled>Place order</button>
+    <button class="clear" id="clear">Clear order</button>
+  </aside>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const MENU=[
+{n:"Classic Drip Coffee",c:"Hot",e:"☕",p:2.75,d:"Smooth, medium roast brewed fresh all day.",t:"Popular"},
+{n:"Caffe Latte",c:"Hot",e:"🥛",p:4.25,d:"Espresso with steamed milk and a light foam."},
+{n:"Cappuccino",c:"Hot",e:"☕",p:4.25,d:"Equal parts espresso, steamed milk and foam."},
+{n:"Caramel Macchiato",c:"Hot",e:"🍮",p:4.95,d:"Vanilla, steamed milk, espresso and caramel drizzle.",t:"Popular"},
+{n:"Lavender Latte",c:"Hot",e:"💜",p:4.95,d:"Our dreamy house latte with lavender honey.",t:"Today's pick"},
+{n:"Hot Chocolate",c:"Hot",e:"🍫",p:3.95,d:"Rich cocoa with whipped cream. Caffeine free."},
+{n:"Masala Chai Latte",c:"Tea & Chai",e:"🫖",p:4.45,d:"Spiced black tea with steamed milk.",t:"Popular"},
+{n:"Iced Chai Latte",c:"Tea & Chai",e:"🧊",p:4.65,d:"Chai poured over ice with cold milk."},
+{n:"Matcha Latte",c:"Tea & Chai",e:"🍵",p:4.95,d:"Ceremonial green tea whisked with milk."},
+{n:"Peach Green Tea",c:"Tea & Chai",e:"🍑",p:3.75,d:"Light green tea with sweet peach. Hot or iced."},
+{n:"Iced Coffee",c:"Cold",e:"🧋",p:3.45,d:"Slow-steeped coffee served over ice."},
+{n:"Cold Brew",c:"Cold",e:"🥤",p:4.15,d:"Brewed for 18 hours. Super smooth."},
+{n:"Iced Vanilla Latte",c:"Cold",e:"🍦",p:4.75,d:"Espresso, cold milk and vanilla over ice."},
+{n:"Strawberry Lemonade",c:"Cold",e:"🍓",p:3.95,d:"Fresh lemonade with strawberry. No caffeine."},
+{n:"Mocha Frappuccino",c:"Frappes",e:"🍫",p:5.25,d:"Blended coffee, chocolate and ice with whipped cream.",t:"Popular"},
+{n:"Caramel Frappuccino",c:"Frappes",e:"🍯",p:5.25,d:"Creamy blended coffee with buttery caramel."},
+{n:"Vanilla Bean Frappe",c:"Frappes",e:"🍨",p:4.95,d:"Caffeine-free blend of vanilla, milk and ice."},
+{n:"Strawberry Cloud Frappe",c:"Frappes",e:"🍓",p:5.45,d:"Strawberry, cream and ice with a whipped cloud top."},
+{n:"Blueberry Muffin",c:"Bites",e:"🧁",p:3.25,d:"Baked fresh each morning."},
+{n:"Butter Croissant",c:"Bites",e:"🥐",p:3.45,d:"Flaky and warm."},
+{n:"Chocolate Chip Cookie",c:"Bites",e:"🍪",p:2.50,d:"Big, soft and gooey."}
+];
+const CATS=["All","Hot","Cold","Tea & Chai","Frappes","Bites"];
+const SIZES={S:0,M:.5,L:1};
+let cat="All",term="",cart=[];
+const $=id=>document.getElementById(id), money=n=>"$"+n.toFixed(2);
+function drawCats(){
+  $("cats").innerHTML=CATS.map(c=>{const k=c==="All"?MENU.length:MENU.filter(m=>m.c===c).length;
+    return `<button class="cat" data-c="${c}" aria-pressed="${c===cat}">${c}<small>${k}</small></button>`}).join("");
+}
+function drawGrid(){
+  const list=MENU.filter(m=>(cat==="All"||m.c===cat)&&(m.n+m.d+m.c).toLowerCase().includes(term));
+  $("title").textContent=cat==="All"?"All drinks":cat;
+  if(cat==="Bites")$("title").textContent="Bites";
+  $("grid").innerHTML=list.length?list.map(m=>`<div class="item"><div class="emoji">${m.e}</div>${m.t?`<span class="badge">${m.t}</span>`:""}<h3>${m.n}</h3><p>${m.d}</p><div class="row"><span class="price">${money(m.p)}</span><button class="add" data-n="${m.n}" aria-label="Add ${m.n}">Add</button></div></div>`).join(""):`<div class="empty">No matches. Try a different word or category.</div>`;
+}
+function price(l){return l.p+(l.bite?0:SIZES[l.s])}
+function drawCart(){
+  const sub=cart.reduce((a,l)=>a+price(l)*l.q,0),tax=sub*.08,cnt=cart.reduce((a,l)=>a+l.q,0);
+  $("lines").innerHTML=cart.length?cart.map((l,i)=>`<div class="line"><b>${l.n}</b><span>${money(price(l)*l.q)}</span>${l.bite?"":`<div class="sizes" style="grid-column:1/-1">${Object.keys(SIZES).map(s=>`<button data-i="${i}" data-s="${s}" aria-pressed="${l.s===s}">${s}</button>`).join("")}</div>`}<div class="qty"><button data-i="${i}" data-d="-1" aria-label="Remove one">−</button><span>${l.q}</span><button data-i="${i}" data-d="1" aria-label="Add one">+</button></div></div>`).join(""):`<small style="color:var(--mute)">Your order is empty. Tap Add on any item to start.</small>`;
+  $("sub").textContent=money(sub);$("tax").textContent=money(tax);$("tot").textContent=money(sub+tax);
+  $("sCount").textContent=cnt;$("sTotal").textContent=money(sub+tax);$("go").disabled=!cnt;
+}
+function toast(t){const e=$("toast");e.textContent=t;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),2400)}
+$("cats").onclick=e=>{const b=e.target.closest(".cat");if(!b)return;cat=b.dataset.c;drawCats();drawGrid()};
+$("q").oninput=e=>{term=e.target.value.toLowerCase().trim();drawGrid()};
+$("grid").onclick=e=>{const b=e.target.closest(".add");if(!b)return;
+  const m=MENU.find(x=>x.n===b.dataset.n),bite=m.c==="Bites";
+  const ex=cart.find(l=>l.n===m.n&&l.s==="M");
+  if(ex)ex.q++;else cart.push({n:m.n,p:m.p,s:"M",q:1,bite});
+  drawCart();toast(m.n+" added to your order")};
+$("lines").onclick=e=>{const b=e.target.closest("button");if(!b)return;const i=+b.dataset.i;
+  if(b.dataset.s)cart[i].s=b.dataset.s;
+  if(b.dataset.d){cart[i].q+=+b.dataset.d;if(cart[i].q<1)cart.splice(i,1)}
+  drawCart()};
+$("clear").onclick=()=>{cart=[];drawCart()};
+$("go").onclick=()=>{const n="DC-"+(100+Math.floor(Math.random()*900));cart=[];drawCart();toast("Order "+n+" placed. We'll call your name soon!")};
+$("theme").onclick=()=>{const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"};
+drawCats();drawGrid();drawCart();
+</script>
+</body>
+</html>
